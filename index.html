@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2048 Game</title>
+    <style>
+        /* Các tùy chỉnh CSS cho giao diện trò chơi 2048 */
+        /* Tùy chỉnh theo ý thích của bạn */
+    </style>
+</head>
+<body>
+    <h1>2048 Game</h1>
+    <div id="gameBoard"></div>
+
+    <script>
+        // Mã JavaScript cho trò chơi 2048
+
+        // Đặt kích thước bảng trò chơi
+        const boardSize = 4;
+
+        // Khởi tạo bảng trò chơi rỗng
+        let board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+
+        // Hàm để thêm số 2 hoặc 4 vào vị trí ngẫu nhiên trên bảng
+        function addRandomNumber() {
+            const emptyCells = [];
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    if (board[row][col] === 0) {
+                        emptyCells.push({ row, col });
+                    }
+                }
+            }
+
+            if (emptyCells.length > 0) {
+                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                board[randomCell.row][randomCell.col] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
+
+        // Hàm để hiển thị bảng trò chơi lên giao diện
+        function renderBoard() {
+            const gameBoard = document.getElementById("gameBoard");
+            gameBoard.innerHTML = "";
+
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    const cellValue = board[row][col] === 0 ? "" : board[row][col];
+                    gameBoard.innerHTML += `<div>${cellValue}</div>`;
+                }
+            }
+        }
+
+        // Hàm để khởi tạo trò chơi
+        function startGame() {
+            addRandomNumber();
+            addRandomNumber();
+            renderBoard();
+        }
+
+        // Hàm kiểm tra trạng thái chiến thắng hoặc thất bại
+        function checkWinOrLose() {
+            // Kiểm tra điều kiện thắng hoặc thua
+            // Nếu người chơi thắng hoặc thua, hiển thị thông báo phù hợp
+        }
+
+        // Gọi hàm khởi tạo trò chơi khi trang được tải
+        window.onload = function () {
+            startGame();
+        };
+
+        // Xử lý sự kiện khi người dùng nhấn phím
+        document.addEventListener("keydown", function (event) {
+            // Lấy mã phím vừa nhấn
+            const key = event.key;
+
+            // Tùy chỉnh hành động khi người dùng nhấn phím (di chuyển ô, thêm số...)
+            if (key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight") {
+                // Thực hiện di chuyển ô và gộp số
+                // Cập nhật lại bảng trò chơi
+                renderBoard();
+
+                // Kiểm tra chiến thắng hoặc thất bại
+                checkWinOrLose();
+            }
+        });
+    </script>
+</body>
+</html>
