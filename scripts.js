@@ -99,7 +99,58 @@ function moveTiles(moveRow, moveCol) {
 
     return moved;
 }
+// Hàm xử lý sự kiện cảm ứng
+let touchStartX, touchStartY;
+document.addEventListener("touchstart", function (event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+});
 
+document.addEventListener("touchend", function (event) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        // Di chuyển ngang
+        if (dx > 0) {
+            // Vuốt sang phải
+            moveTiles(0, 1);
+        } else {
+            // Vuốt sang trái
+            moveTiles(0, -1);
+        }
+    } else {
+        // Di chuyển dọc
+        if (dy > 0) {
+            // Vuốt xuống dưới
+            moveTiles(1, 0);
+        } else {
+            // Vuốt lên trên
+            moveTiles(-1, 0);
+        }
+    }
+
+    // Kiểm tra chiến thắng hoặc thua
+    checkWinOrLose();
+});
+
+// Hàm để hiển thị bảng trò chơi lên giao diện
+function renderBoard() {
+    const gameBoard = document.getElementById("gameBoard");
+    gameBoard.innerHTML = "";
+
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            const cellValue = board[row][col];
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.innerText = cellValue !== 0 ? cellValue : "";
+            gameBoard.appendChild(cell);
+        }
+    }
+}
 // Kiểm tra trạng thái chiến thắng hoặc thua
 function checkWinOrLose() {
     // Kiểm tra điều kiện thắng hoặc thua
