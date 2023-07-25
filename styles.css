@@ -1,0 +1,52 @@
+/* Các tùy chỉnh CSS cho giao diện trò chơi 2048 */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 30px;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template-columns: repeat(6, 100px);
+    grid-gap: 10px;
+    margin: 50px auto;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    position: relative;
+}
+
+.cell img {
+    max-width: 100%;
+    max-height: 100%;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+#score {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#imageSelector {
+    margin-bottom: 20px;
+}
+
+#imageSelector select {
+    font-size: 16px;
+    padding: 5px 10px;
+}
