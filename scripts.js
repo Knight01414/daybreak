@@ -191,37 +191,24 @@ window.onload = function () {
         checkWinOrLose();
     });
 
-    // Xử lý sự kiện khi người dùng nhấn phím
-    document.addEventListener("keydown", function (event) {
-        // Lấy mã phím vừa nhấn
-        const key = event.key;
+    // Xử lý sự kiện khi người chơi nhấn nút điều hướng
+    document.getElementById("up").addEventListener("click", function () {
+        moveTiles(-1, 0);
+        checkWinOrLose();
+    });
 
-        // Xác định hướng di chuyển dựa trên phím nhấn
-        let moveRow = 0;
-        let moveCol = 0;
-        if (key === "ArrowUp") {
-            moveRow = -1;
-        } else if (key === "ArrowDown") {
-            moveRow = 1;
-        } else if (key === "ArrowLeft") {
-            moveCol = -1;
-        } else if (key === "ArrowRight") {
-            moveCol = 1;
-        } else {
-            return;
-        }
+    document.getElementById("down").addEventListener("click", function () {
+        moveTiles(1, 0);
+        checkWinOrLose();
+    });
 
-        // Di chuyển các ô và gộp số
-        const moved = moveTiles(moveRow, moveCol);
+    document.getElementById("left").addEventListener("click", function () {
+        moveTiles(0, -1);
+        checkWinOrLose();
+    });
 
-        // Nếu có di chuyển, thêm số mới và cập nhật giao diện
-        if (moved) {
-            addRandomNumber();
-            renderBoard();
-            document.getElementById("score").innerText = `Score: ${score}`;
-        }
-
-        // Kiểm tra chiến thắng hoặc thua
+    document.getElementById("right").addEventListener("click", function () {
+        moveTiles(0, 1);
         checkWinOrLose();
     });
 
