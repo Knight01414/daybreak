@@ -4,12 +4,20 @@
     <title>2048 Game</title>
     <style>
         /* Các tùy chỉnh CSS cho giao diện trò chơi 2048 */
-        /* Tùy chỉnh theo ý thích của bạn */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
 
         #gameBoard {
             display: grid;
             grid-template-columns: repeat(6, 100px);
             grid-gap: 10px;
+            margin: 50px auto;
         }
 
         .cell {
@@ -21,11 +29,45 @@
             align-items: center;
             border: 1px solid #ccc;
             background-color: #eee;
+            position: relative;
+        }
+
+        .cell img {
+            max-width: 100%;
+            max-height: 100%;
+            opacity: 0.8;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        #score {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #imageSelector {
+            margin-bottom: 20px;
+        }
+
+        #imageSelector select {
+            font-size: 16px;
+            padding: 5px 10px;
         }
     </style>
 </head>
 <body>
     <h1>2048 Game</h1>
+    <div id="imageSelector">
+        <label for="customImage">Select Custom Image:</label>
+        <select id="customImage">
+            <option value="default">Default</option>
+            <option value="cat">Cat</option>
+            <option value="dog">Dog</option>
+            <!-- Thêm các tùy chọn hình ảnh tùy chỉnh khác vào đây -->
+        </select>
+    </div>
     <div id="gameBoard"></div>
     <div id="score">Score: 0</div>
 
@@ -43,6 +85,9 @@
 
         // Tính điểm
         let score = 0;
+
+        // Hình ảnh tùy chỉnh cho mỗi ô
+        let customImage = "default";
 
         // Hàm để thêm số 2 hoặc 4 vào vị trí ngẫu nhiên trên bảng
         function addRandomNumber() {
@@ -69,7 +114,7 @@
             for (let row = 0; row < boardSize; row++) {
                 for (let col = 0; col < boardSize; col++) {
                     const cellValue = board[row][col];
-                    const cellImage = images[cellValue];
+                    const cellImage = images[cellValue] || images[customImage];
                     gameBoard.innerHTML += `<div class="cell">${cellImage}</div>`;
                 }
             }
@@ -190,6 +235,13 @@
             for (let i = 2; i <= 2048; i *= 2) {
                 images[i] = `<img src="${i}.jpg" alt="${i}">`;
             }
+
+            // Xử lý sự kiện thay đổi hình ảnh tùy chỉnh
+            const imageSelector = document.getElementById("customImage");
+            imageSelector.addEventListener("change", function () {
+                customImage = imageSelector.value;
+                renderBoard();
+            });
 
             startGame();
         };
