@@ -6,28 +6,8 @@ const boardSize = 4;
 // Khởi tạo bảng trò chơi rỗng
 let board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
 
-// Đối tượng Image để quản lý hình ảnh trong ô
-const images = {};
-
 // Tính điểm
 let score = 0;
-
-// Hình ảnh tùy chỉnh cho mỗi ô
-let customImage = "default";
-
-// Danh sách tên hình ảnh
-const imagesList = [
-    "default",
-    "DBO"
-    // Thêm các tên hình ảnh tùy chỉnh khác vào đây
-];
-
-// Danh sách tham chiếu hình ảnh tương ứng
-const imageRefs = {
-    // Thêm các tham chiếu hình ảnh tùy chỉnh khác vào đây
-    "default": "",
-    "DBO": "img"
-};
 
 // Hàm để thêm số 2 hoặc 4 vào vị trí ngẫu nhiên trên bảng
 function addRandomNumber() {
@@ -54,19 +34,13 @@ function renderBoard() {
     for (let row = 0; row < boardSize; row++) {
         for (let col = 0; col < boardSize; col++) {
             const cellValue = board[row][col];
-            let cellImage = images[cellValue];
-
             const cell = document.createElement("div");
             cell.className = "cell";
-            if (cellValue !== 0) {
-                cell.innerHTML = `<div class="cell-content">${cellImage ? cellImage : cellValue}</div>`;
-            }
+            cell.innerText = cellValue !== 0 ? cellValue : "";
             gameBoard.appendChild(cell);
         }
     }
 }
-
-// ...
 
 // Hàm để khởi tạo trò chơi
 function startGame() {
@@ -77,42 +51,109 @@ function startGame() {
     addRandomNumber();
     renderBoard();
 }
-// ...
 
-// Xử lý sự kiện thay đổi hình ảnh tùy chỉnh
-const imageSelector = document.getElementById("customImage");
-imageSelector.addEventListener("change", function () {
-    customImage = imageSelector.value;
-    renderBoard();
-});
-
-// Xử lý sự kiện chọn hình ảnh tùy chỉnh từ file
-const customImageFile = document.getElementById("customImageFile");
-customImageFile.addEventListener("change", function () {
-    const file = customImageFile.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function () {
-        const image = new Image();
-        image.src = reader.result;
-        image.onload = function () {
-            images[customImage] = image;
-            renderBoard();
-        };
-    };
-
-    if (file) {
-        reader.readAsDataURL(file);
+// Kiểm tra xem ô có thể di chuyển hay không
+function canMove(row, col, moveRow, moveCol) {
+    // Kiểm tra xem ô đích có giống giá trị ô hiện tại hay không
+    if (board[row + moveRow][col + moveCol] === 0 || board[row + moveRow][col + moveCol] === board[row][col]) {
+        return true;
     }
-});
+    return false;
+}
+
+// Hàm di chuyển các ô
+function moveTiles(moveRow, moveCol) {
+    let moved = false;
+
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            if (board[row][col] !== 0) {
+                let newRow = row + moveRow;
+                let newCol = col + moveCol;
+
+                while (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize) {
+                    if (board[newRow][newCol] === 0) {
+                        // Di chuyển ô tới vị trí mới nếu ô đích trống
+                        board[newRow][newCol] = board[row][col];
+                        board[row][col] = 0;
+                        row = newRow;
+                        col = newCol;
+                        moved = true;
+                    } else if (board[newRow][newCol] === board[row][col]) {
+                        // Gộp số nếu giá trị ô đích giống với ô hiện tại
+                        board[newRow][newCol] *= 2;
+                        score += board[newRow][newCol];
+                        board[row][col] = 0;
+                        moved = true;
+                        break;
+                    } else {
+                        break;
+                    }
+
+                    newRow += moveRow;
+                    newCol += moveCol;
+                }
+            }
+        }
+    }
+
+    return moved;
+}
+
+// Kiểm tra trạng thái chiến thắng hoặc thua
+function checkWinOrLose() {
+    // Kiểm tra điều kiện thắng hoặc thua
+    // Nếu người chơi thắng hoặc thua, hiển thị thông báo phù hợp
+
+    // Kiểm tra chiến thắng
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            if (board[row][col] === 2048) {
+                alert("You win!");
+                startGame();
+                return;
+            }
+        }
+    }
+
+    // Kiểm tra thua
+    let hasEmptyCell = false;
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            if (board[row][col] === 0) {
+                hasEmptyCell = true;
+                break;
+            }
+        }
+    }
+
+    if (!hasEmptyCell) {
+        // Kiểm tra xem có thể di chuyển các ô hay không
+        let canMoveTiles = false;
+        const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+        for (let row = 0; row < boardSize; row++) {
+            for (let col = 0; col < boardSize; col++) {
+                for (const direction of directions) {
+                    const moveRow = direction[0];
+                    const moveCol = direction[1];
+                    if (canMove(row, col, moveRow, moveCol)) {
+                        canMoveTiles = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!canMoveTiles) {
+            alert("Game over! Your score: " + score);
+            startGame();
+            return;
+        }
+    }
+}
 
 // Gọi hàm khởi tạo trò chơi khi trang được tải
 window.onload = function () {
-    // Tạo đối tượng Image cho từng giá trị số trên bảng
-    for (let i = 2; i <= 2048; i *= 2) {
-        images[i] = `<img src="img/img${i}.jpg" alt="${i}">`;
-    }
-
     // Xử lý sự kiện khi người dùng nhấn phím
     document.addEventListener("keydown", function (event) {
         // Lấy mã phím vừa nhấn
@@ -149,5 +190,3 @@ window.onload = function () {
 
     startGame();
 };
-
-
