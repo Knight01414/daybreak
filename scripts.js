@@ -18,10 +18,16 @@ let customImage = "default";
 // Danh sách tên hình ảnh
 const imagesList = [
     "default",
-    "cat",
-    "dog"
+    "DBO",
     // Thêm các tên hình ảnh tùy chỉnh khác vào đây
 ];
+
+// Danh sách tham chiếu hình ảnh tương ứng
+const imageRefs = {
+    // Thêm các tham chiếu hình ảnh tùy chỉnh khác vào đây
+    "default": "bg.png",
+    "DBO": "img"
+};
 
 // Hàm để thêm số 2 hoặc 4 vào vị trí ngẫu nhiên trên bảng
 function addRandomNumber() {
@@ -48,8 +54,22 @@ function renderBoard() {
     for (let row = 0; row < boardSize; row++) {
         for (let col = 0; col < boardSize; col++) {
             const cellValue = board[row][col];
-            const cellImage = images[cellValue] || images[customImage];
-            gameBoard.innerHTML += `<div class="cell">${cellImage}</div>`;
+            let cellImage = images[cellValue];
+
+            // Sử dụng background đơn sắc cho các hình ảnh default
+            if (!cellImage && customImage === "default") {
+                gameBoard.innerHTML += `<div class="cell cell-${cellValue}">${cellValue}</div>`;
+            } else {
+                // Sử dụng hình ảnh trong thư mục img cho các hình ảnh custom và pre-defined
+                if (customImage === "DBO") {
+                    // Sử dụng hình ảnh tùy chỉnh DBO nếu đã được tải lên
+                    const ref = imageRefs[cellValue];
+                    cellImage = ref ? `<img src="img/${ref}${cellValue}.jpg" alt="${cellValue}">` : images["default"];
+                } else {
+                    cellImage = images[cellValue] || images[customImage];
+                }
+                gameBoard.innerHTML += `<div class="cell">${cellImage}</div>`;
+            }
         }
     }
 }
@@ -166,8 +186,8 @@ function checkWinOrLose() {
 // Gọi hàm khởi tạo trò chơi khi trang được tải
 window.onload = function () {
     // Tạo đối tượng Image cho từng giá trị số trên bảng
-    for (const image of imagesList) {
-        images[image] = `<img src="img/${image}.jpg" alt="${image}">`;
+    for (let i = 2; i <= 2048; i *= 2) {
+        images[i] = `<img src="img/img${i}.jpg" alt="${i}">`;
     }
 
     // Xử lý sự kiện thay đổi hình ảnh tùy chỉnh
