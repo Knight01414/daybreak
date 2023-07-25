@@ -23,41 +23,4 @@ h1 {
     justify-content: center;
     align-items: center;
     border: 1px solid #ccc;
-    position: relative;
-}
-
-.cell img {
-    max-width: 100%;
-    max-height: 100%;
-    opacity: 0.8;
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-}
-
-.cell-content {
-    /* Các thuộc tính để căn chỉnh số ở giữa ô */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#score {
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-#imageSelector {
-    margin-bottom: 20px;
-}
-
-#imageSelector select {
-    font-size: 16px;
-    padding: 5px 10px;
-}
-
-#imageSelector input[type="file"] {
-    display: none;
 }
